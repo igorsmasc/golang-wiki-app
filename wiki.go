@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 )
 
 // Page struct
@@ -68,10 +69,17 @@ func saveHandler(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/view/"+title, http.StatusFound)
 }
 
+func deleteHandler(w http.ResponseWriter, r *http.Request) {
+	title := r.URL.Path[len("/delete/"):]
+	os.Remove(title + ".txt")
+	http.Redirect(w, r, "/", http.StatusFound)
+}
+
 func main() {
 	http.HandleFunc("/", mainHandler)
 	http.HandleFunc("/view/", viewHandler)
 	http.HandleFunc("/edit/", editHandler)
 	http.HandleFunc("/save/", saveHandler)
+	http.HandleFunc("/delete/", deleteHandler)
 	log.Fatal(http.ListenAndServe(":8180", nil))
 }
