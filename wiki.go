@@ -29,9 +29,9 @@ func loadPage(title string) (*Page, error) {
 	return &Page{Title: title, Body: body}, nil
 }
 
-// func mainHandler(w http.ResponseWriter, r *http.Request) {
-// 	readerTemplate(w, "home")
-// }
+func mainHandler(w http.ResponseWriter, r *http.Request) {
+	readerTemplate(w, "home", nil)
+}
 
 func editHandler(w http.ResponseWriter, r *http.Request) {
 	title := r.URL.Path[len("/edit/"):]
@@ -61,7 +61,7 @@ func readerTemplate(w http.ResponseWriter, tmpl string, p *Page) {
 }
 
 func main() {
-	//http.HandleFunc("/", mainHandler)
+	http.HandleFunc("/", mainHandler)
 	http.HandleFunc("/view/", viewHandler)
 	http.HandleFunc("/edit/", editHandler)
 	//http.HandleFunc("/save/", saveHandler)
