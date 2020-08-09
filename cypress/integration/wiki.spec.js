@@ -22,7 +22,7 @@ describe("Test view page elements", () => {
 });
 
 describe("Test save and display new wikis", () => {
-  it.only("create a new wiki and save it", () => {
+  it("create a new wiki and save it", () => {
     let wiki = "JustTestWiki";
     let wikiContent = "Delete this wiki after test";
     //verify if this wiki doesn't exists

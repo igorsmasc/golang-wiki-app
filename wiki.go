@@ -14,6 +14,8 @@ type Page struct {
 	Body  []byte
 }
 
+var templates = template.Must(template.ParseFiles("home.html", "edit.html", "view.html"))
+
 func (p *Page) save() error {
 	filename := p.Title + ".txt"
 	return ioutil.WriteFile(filename, p.Body, 0600)
@@ -31,7 +33,7 @@ func loadPage(title string) (*Page, error) {
 }
 
 func mainHandler(w http.ResponseWriter, r *http.Request) {
-	readerTemplate(w, "home", nil)
+	renderTemplate(w, "home", nil)
 }
 
 func editHandler(w http.ResponseWriter, r *http.Request) {
@@ -41,7 +43,7 @@ func editHandler(w http.ResponseWriter, r *http.Request) {
 		p = &Page{Title: title}
 	}
 
-	readerTemplate(w, "edit", p)
+	renderTemplate(w, "edit", p)
 }
 
 func viewHandler(w http.ResponseWriter, r *http.Request) {
@@ -53,17 +55,11 @@ func viewHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	readerTemplate(w, "view", p)
+	renderTemplate(w, "view", p)
 }
 
-func readerTemplate(w http.ResponseWriter, tmpl string, p *Page) {
-	t, err := template.ParseFiles("templates/" + tmpl + ".html")
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	err = t.Execute(w, p)
+func renderTemplate(w http.ResponseWriter, tmpl string, p *Page) {
+	err := templates.ExecuteTemplate(w, tmpl+".html", p)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
